@@ -275,13 +275,6 @@ $(document).ready(function(){
                 console.log(errors);
 
                 console.log(xhr.responseJSON);
-
-                if(xhr.responseJSON.errors.password)
-                {
-                    
-                    $('.error-password').html(xhr.responseJSON.errors.password[0])
-                    $('.error-password').show()
-                }
                     
                 if(xhr.responseJSON.errors.address)
                 {

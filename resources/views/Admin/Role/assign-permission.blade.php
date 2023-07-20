@@ -22,14 +22,14 @@
                                     <th>Assign Permission</th>
                                 </tr>
                             </thead>
-                            <form action="{{route('assing.permission-to-role')}}" method="POST">
+                            <form action="{{route('assing.permission-to-role',['id'=>$id])}}" method="POST">
                                 @csrf
                                 @method('POST')
                                 <tbody>
                                         @foreach ($permissions as $permission)
                                         <tr>
                                             <td>{{$permission->name}}</td>
-                                            <td data-id="{{$permission->id}}"><input type="checkbox" id="{{$permission->id}}" name="permission[]" value="{{$permission->id}}"></td>
+                                            <td data-id="{{$permission->id}}"><input type="checkbox" id="{{$permission->id}}" name="permission[]" value="{{$permission->id}}"  @if(in_array($permission->name,$hasPermission)) checked @endif)></td>
                                         </tr>
                                         @endforeach
                                 </tbody>

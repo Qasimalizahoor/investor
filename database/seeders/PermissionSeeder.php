@@ -14,7 +14,8 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        $allPermissions = ['view investor','add investor','delete investor'];
+        $allPermissions = ['view-investor','add-investor','delete-investor','view-permission','add-permission','delete-permission',
+        'add-role','view-role'];
         foreach($allPermissions as $item)
         {
             Permission::create([

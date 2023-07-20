@@ -47,8 +47,8 @@ Route::middleware('auth.user')->group(function () {
     // Roles
 
     Route::get('roles',[RoleController::class,'index'])->name('roles');
-    Route::get('assign/permission',[RoleController::class,'assignPermission'])->name('assign.permission');
-    Route::post('assign/permission-to-role',[RoleController::class,'syncPermissionToRole'])->name('assing.permission-to-role');
+    Route::get('assign/permission/{id}',[RoleController::class,'assignPermission'])->name('assign.permission');
+    Route::post('assign/permission-to-role/{id?}',[RoleController::class,'syncPermissionToRole'])->name('assing.permission-to-role');
 
 
     

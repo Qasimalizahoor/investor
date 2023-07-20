@@ -15,8 +15,7 @@ class CreateStatusesTable extends Migration
     {
         Schema::create('statuses', function (Blueprint $table) {
             $table->id();
-            $table->enum('status', ['pending', 'inprogress', 'approved','rejected']);
-            $table->softDeletes();
+            $table->enum('status', ['pending', 'in-progress', 'rejected','approved']);
             $table->timestamps();
         });
     }

@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Status;
 use App\Models\Investor;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Mail\UserCreatedMail;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\InvestorStoreRequest;
-use Illuminate\Support\Str;
 
 class InvestorController extends Controller
 {
@@ -56,6 +58,8 @@ class InvestorController extends Controller
      */
     public function store(InvestorStoreRequest $request)
     {
+        try
+        {
         $investorTable = $request->only(['phone','address']);
         $userTable = $request->only(['name','email']);
         $investor = new Investor();
@@ -69,13 +73,28 @@ class InvestorController extends Controller
 
         $user->password = $password;
         $investor->status_id = 1;
+        
+        DB::beginTransaction();
+
         $user->save();
         $user->investor()->save($investor);
+
+        // Assign Role
+        $role = Role::where('name','user')->pluck('name');
+        $user->assignRole($role);
+
+        DB::commit();
 
         $details = $request->only(['name','email']);
         $details['password'] = $plainPassword;
         Mail::to($details['email'])->send(new UserCreatedMail($details));
         return response()->json(['success'=>'New Investor Record Added Successfully']);
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
+        }
 
     }
 

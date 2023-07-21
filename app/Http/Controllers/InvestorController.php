@@ -11,6 +11,7 @@ use App\Mail\UserCreatedMail;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\InvestorStoreRequest;
 
@@ -33,7 +34,22 @@ class InvestorController extends Controller
              
         return Datatables::of($query)
             ->addColumn('action', function ($query) { {
-                        return '<a href="javascript:void(0)" data-id="'.$query->id.'" class="edit btn btn-primary btn-sm me-1 edit-investor">Edit</a><a href="javascript:void(0)" data-id="' . $query->id . '" class="delete-investor btn btn-danger btn-sm">Delete </a>';
+                if(Auth::user()->can('add-investor') && Auth::user()->can('delete-investor'))
+                {
+                    return '<a href="javascript:void(0)" data-id="'.$query->id.'" class="edit btn btn-primary btn-sm me-1 edit-investor">Edit</a><a href="javascript:void(0)" data-id="' . $query->id . '" class="delete-investor btn btn-danger btn-sm">Delete </a>';
+                }
+                else if(Auth::user()->can('add-investor'))
+                {
+                    return '<a href="javascript:void(0)" data-id="'.$query->id.'" class="edit btn btn-primary btn-sm me-1 edit-investor">Edit</a>';
+                }
+                else if(Auth::user()->can('delete-investor'))
+                {
+                    return '<a href="javascript:void(0)" data-id="' . $query->id . '" class="delete-investor btn btn-danger btn-sm">Delete </a>';
+                }
+                else {
+                    return "<a href='javascript:void(0)'  class=' btn btn-danger btn-sm me-1 '>You Don't Have Permission</a>";
+                }
+                        
                 }
             })
             ->rawColumns(['action'])

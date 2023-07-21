@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Permission;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Permission;
 use Yajra\DataTables\Contracts\DataTable;
 
@@ -26,10 +27,24 @@ class PermissionController extends Controller
 
         return DataTables::of($query)
         ->addColumn('action',function($query){{
-            return '<a href="javascript:void(0)" data-id="'.$query->id.'" class="edit btn btn-primary btn-sm me-1 edit-permission"> Edit </a> 
-            <a href="javascript:void(0)" data-id="' . $query->id . '" class="delete-permission btn btn-danger btn-sm">Delete </a>
+            if(Auth::user()->can('add-permission') && Auth::user()->can('delete-permission'))
+            {
+                return '<a href="javascript:void(0)" data-id="'.$query->id.'" class="edit btn btn-primary btn-sm me-1 edit-permission"> Edit </a> 
+                <a href="javascript:void(0)" data-id="' . $query->id . '" class="delete-permission btn btn-danger btn-sm">Delete </a>';
+            }
+            else if(Auth::user()->can('add-permission') )
+            {
+                return '<a href="javascript:void(0)" data-id="'.$query->id.'" class="edit btn btn-primary btn-sm me-1 edit-permission"> Edit </a>';
+            }
+            else if( Auth::user()->can('delete-permission'))
+            {
+                return '<a href="javascript:void(0)" data-id="' . $query->id . '" class="delete-permission btn btn-danger btn-sm">Delete </a>';
+            }
+            else
+            {
+                return "<a href='javascript:void(0)'  class=' btn btn-danger btn-sm me-1 '>You Don't Have Permission</a>";
+            }
             
-            ';
         }})
         ->rawColumns(['action'])->make(true);
         // <a href="javascript:void(0)" data-id="' . $query->id . '" class="delete-investor btn btn-danger btn-sm">Delete </a>

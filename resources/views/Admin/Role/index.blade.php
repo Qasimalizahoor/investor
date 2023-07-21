@@ -36,11 +36,16 @@
                                 @foreach ($roles as $role )
                                     <tr>
                                         <th>{{ucfirst($role->name)}}</th>
-                                        @if($role->name != 'admin')
-                                        <th><a href="{{route('assign.permission',['id'=>$role->id])}}" class="btn btn-primary" >Assign Permission</a></th>
+                                        @can('assign-permission')
+                                            @if($role->name != 'admin')
+                                            <th><a href="{{route('assign.permission',['id'=>$role->id])}}" class="btn btn-primary" >Assign Permission</a></th>
+                                            @else
+                                            <th><a href="#" class="btn btn-success" style="cursor: not-allowed;">All Permissions Assigned</a></th>
+                                            @endif 
+                                        
                                         @else
-                                        <th><a href="#" class="btn btn-success" style="cursor: not-allowed;">All Permissions Assigned</a></th>
-                                        @endif
+                                            <th><a href="#" class="btn btn-danger" style="cursor: not-allowed;">You Don't Have Permission</a></th>
+                                        @endcan
                                     </tr>                                       
                                 @endforeach
                             </thead>

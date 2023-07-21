@@ -28,7 +28,9 @@
             {{-- @if(auth()->user()->can('add-user'))
                 <a href="{{ route('users.create') }}" class=" btn btn-success float-end addNewUser">Add New User</a>
             @endif --}}
+            @can('add-permission')
             <button type="button" class="btn btn-success float-end addNewPermission" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#permissionModal">Add New Pemission</button>
+            @endcan
         </div>
 
     </div>
